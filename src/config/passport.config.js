@@ -4,6 +4,7 @@ import GithubStrategy from "passport-github2";
 import jwt from "passport-jwt";
 import { cookieExtractor } from "../utils/jwt.js";
 import { GITHUB_CALLBACK_URL, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, SECRET_CODE_JWT } from "./config.js";
+import { cartModel } from "../models/cart.models.js";
 
 
 
@@ -40,18 +41,24 @@ const initializePassport = () => {
     },
     async (accessToken, refreshToken, profile, done) => {
         try {
-            //console.log(profile);
-            let user = await userModel.findOne({ email: profile._json.email })
+            let user = await userModel.findOne({ email: profile._json.email });
             if (user) {
                 return done(null, user);
             } else {
+                const cart = {
+                    products: []
+                }
+                const cartUser = await cartModel.create(cart);
                 user = await userModel.create({
                     firstName: profile._json.name,
                     lastName: "",
                     email: profile._json?.email,
                     password: "",
                     role: "user",
+                    carts: cartUser._id,
                 }); 
+                const userUpdate = await userModel.updateOne({ email: user.email }, {carts : cartUser._id });
+                user = await userModel.findOne({ email: user.email });
                 return done(null, user);
             }
         } catch (error) {

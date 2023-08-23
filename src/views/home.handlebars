@@ -1,9 +1,10 @@
 <div>
     <h1>Home</h1>
-    <h2>Welcome {{this.user.user.role}}: {{this.user.user.firstName}} {{this.user.user.lastName}}</h2>
+    <h2>Welcome {{user.user.role}}: {{user.user.firstName}} {{user.user.lastName}}</h2>
     <form action="/api/v1/session/logout" method="get">
         <br />
         <button type="submit">logout</button>
+        <button type="button"><a href="/views/cart/{{cartId}}">Carrito</a></button>
     </form>
     <h2>Products List</h2>
     {{#if products}}
@@ -14,11 +15,10 @@
                 <p>price: {{this.price}}</p>
                 <p>category: {{this.category}}</p>
                 <p>stock: {{this.stock}} </p>
-                <p id="idProduct">id: {{this.id}}</p>
+                <p id="idProduct">id: {{this.id}}</p>              
                 <button type="button" onclick="addCartProduct('{{this.id}}')" class="botonAgregarCarrito">Agregar al carrito</button>
             </div>
         {{/each }} 
-    
     {{else}}
         <p>No products found</p>
     {{/if}}

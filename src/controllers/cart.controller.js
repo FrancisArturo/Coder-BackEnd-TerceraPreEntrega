@@ -13,30 +13,30 @@ export default class CartsController {
             if (cartProducts === "Cart does not exist") {
                 return res.json({
                     message: "Cart does not exist",
-                    data: cart
+                    data: cartProducts,
                 })
             }
             return res.json({
                 message: "Cart retrieved successfully",
-                data: cart
+                data: cartProducts,
             })
             //res.render("cart", { cartProducts, cid });
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
     }
-    addCartController = async (req, res) => {
-        try {
-            const cart = req.body;
-            const newCart = await this.cartsService.addCart(cart);
-            return res.json({
-                message: "Cart added successfully",
-                data: newCart
-            })
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-    }
+    // addCartController = async (req, res) => {
+    //     try {
+    //         const cart = req.body;
+    //         const newCart = await this.cartsService.addCart(cart);
+    //         return res.json({
+    //             message: "Cart added successfully",
+    //             data: newCart
+    //         })
+    //     } catch (error) {
+    //         res.status(400).json({ message: error.message });
+    //     }
+    // }
     addProductCartController = async (req, res) => {
         try {
             const { cid, pid } = req.params;

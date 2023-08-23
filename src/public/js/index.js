@@ -12,7 +12,7 @@ const addProductStock = document.getElementById("productSt");
 const addProductCategory = document.getElementById("productCategory");
 const addProductStatus = document.getElementById("productStatus");
 const addProductCode = document.getElementById("productCode");
-const addBtn = document.getElementById("botonAdd");   
+// const addBtn = document.getElementById("botonAdd");   
 const idProduct = document.getElementById("idProduct").innerText;
 
 
@@ -35,22 +35,27 @@ async function addProduct(product) {
     return data;
 }
 
-const createNewCart = async () => {
-    const res = await fetch("/api/v1/carts", {
-        method: "POST",
-    });
-    const data = await res.json();
-    cartId = data.data._id;
-    // id del cart en el sessionStorage
-    sessionStorage.setItem("cartId", cartId);
-    return cartId;   
-}
+// const createNewCart = async () => {
+//     const res = await fetch("/api/v1/carts", {
+//         method: "POST",
+//     });
+//     const data = await res.json();
+//     cartId = data.data._id;
+//     id del cart en el sessionStorage
+//     sessionStorage.setItem("cartId", cartId);
+//     return cartId;   
+// }
 
-const  addCartProduct = async (pid) => {
-    let cartId = sessionStorage.getItem("cartId");
-    if (!cartId) {
-        cartId = await createNewCart();
-    }
+
+const addCartProduct = async (pid) => {
+    const userFound = await fetch("/api/v1/session/cartid", {
+        method: "GET",
+    });
+    const userData = await userFound.json();
+    
+    const cartId = userData.carts;
+    //console.log(cartId)
+    //console.log(cartId);
     const res = await fetch(`/api/v1/carts/${cartId}/products/${pid}`, {
         method: "POST",
     });
@@ -61,27 +66,27 @@ const  addCartProduct = async (pid) => {
     return data;
 }
 
-addBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const product = {
-        title: addProductTitle.value,
-        price: addProductPrice.value,
-        description: addProductDescription.value,
-        stock: addProductStock.value,
-        category: addProductCategory.value,
+// addBtn.addEventListener("click", async (e) => {
+//     e.preventDefault();
+//     const product = {
+//         title: addProductTitle.value,
+//         price: addProductPrice.value,
+//         description: addProductDescription.value,
+//         stock: addProductStock.value,
+//         category: addProductCategory.value,
         
-        status: addProductStatus.value,
-        code: addProductCode.value,
-    };
-    await addProduct(product);
-    addProductTitle.value = "";
-    addProductPrice.value = "";
-    addProductDescription.value = "";
-    addProductStock.value = "";
-    addProductCategory.value = "";
-    addProductStatus.value = "";
-    addProductCode.value = "";
-});
+//         status: addProductStatus.value,
+//         code: addProductCode.value,
+//     };
+//     await addProduct(product);
+//     addProductTitle.value = "";
+//     addProductPrice.value = "";
+//     addProductDescription.value = "";
+//     addProductStock.value = "";
+//     addProductCategory.value = "";
+//     addProductStatus.value = "";
+//     addProductCode.value = "";
+// });
 
 
 

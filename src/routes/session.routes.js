@@ -20,11 +20,12 @@ export default class sessionRoutes {
         this.router.post(`${this.path}/login`, this.sessionController.loginUserController);
         this.router.get(`${this.path}/logout`, this.sessionController.logoutUserController);
         this.router.post(`${this.path}/recover`, this.sessionController.recoverPasswordController);
+        this.router.get(`${this.path}/cartid`, handlePolicies(["admin", "user"]), this.sessionController.getUserCartIdController);
         this.router.get(`${this.path}/github`, passport.authenticate("github", { scope: [ 'user:email' ], session: false}));
         this.router.get(`${this.path}/github/callback`, passport.authenticate("github", { failureRedirect: "/api/v1/session/failedlogin", session: false }), this.sessionController.githubLoginController);
-        this.router.get(`${this.path}/current`,  handlePolicies(["public"]), this.sessionController.currentPublicController)
-        this.router.get(`${this.path}/current/admin`,  handlePolicies(["admin"]), this.sessionController.currentAdminController)
-        this.router.get(`${this.path}/current/user`,  handlePolicies(["admin", "user"]), this.sessionController.currentUserController)
+        this.router.get(`${this.path}/current`,  handlePolicies(["public"]), this.sessionController.currentPublicController);
+        this.router.get(`${this.path}/current/admin`,  handlePolicies(["admin"]), this.sessionController.currentAdminController);
+        this.router.get(`${this.path}/current/user`,  handlePolicies(["admin", "user"]), this.sessionController.currentUserController);
     }
 }
 

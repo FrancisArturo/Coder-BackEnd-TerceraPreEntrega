@@ -1,20 +1,25 @@
 import { ADMIN_EMAIL, ADMIN_PASSWORD } from "../config/config.js";
-import { UsersService } from "../repositories/index.js";
+import { CartsService, UsersService } from "../repositories/index.js";
 import {generateJWT} from "../utils/jwt.js";
 
 
 export default class SessionController {
     usersService;
+    CartsService
     constructor() {
         this.usersService = UsersService; 
+        this.cartsService = CartsService;
     }
 
     createUserController = async (req, res) => {
         try {
             const newUser = await this.usersService.createUser(req.body);
             if (newUser === "User already exists") {
-            return res.status(400).json({message: "User already exists"})
+            return res.status(400).json({message: "User already exists"});
             }
+            const cartUser = await this.cartsService.addCart();
+            const cartUserId = cartUser._id;
+            const addCartUser = await this.usersService.updateUser(newUser._id, {carts : cartUserId })
             return res.send("User added successfully");
         } catch (error) {
             return res.status(400).json({ message: error.message });
@@ -38,12 +43,11 @@ export default class SessionController {
                 }).redirect('/views/home');
             }
             const userLogin = await this.usersService.loginUser(userSubmitted);
-            //console.log(req.body)
             if (userLogin === "User not found") {
-                return res.status(401).json({message: "User not found"});
+                return res.status(401).render('login', {error: "User not found"})
             }
             if (userLogin === "Incorrect password") {
-                return res.status(401).json({message: "Incorrect password"});
+                return res.status(401).render('login', {error: "Incorrect password"})
             }
             const signUser = {
                 user: userLogin._id,
@@ -54,7 +58,7 @@ export default class SessionController {
             };
             const token = generateJWT({...signUser});
             console.log(token)
-            return res.cookie("cookieToken", token, {
+            res.cookie("cookieToken", token, {
                 maxAge:60*60*1000,
                 httpOnly: true
             }).redirect('/views/home');
@@ -66,6 +70,15 @@ export default class SessionController {
         try {
             res.clearCookie("cookieToken");
             return res.redirect('/views/login');
+        } catch (error) {
+            return console.log(error);
+        }
+    }
+    getUserCartIdController = async (req, res) => {
+        try {
+            const userId = req.user;
+            const cart = await this.usersService.getUserCartId(userId.user.user);
+            return res.send(cart);
         } catch (error) {
             return console.log(error);
         }
@@ -84,15 +97,15 @@ export default class SessionController {
         }
     }
     currentPublicController = async (req, res) => {
-        return res.json({message: "Public access"})
+        return res.json({message: "Public access"});
     }
     currentAdminController = async (req, res) => {
         const user = req.user;
-        return res.json({message: "admin access", user})
+        return res.json({message: "admin access", user});
     }
     currentUserController = async (req, res) => {
         const user = req.user;
-        return res.json({message: "admin and user access", user})
+        return res.json({message: "admin access", user});
     }
 
     githubLoginController  = async (req, res) => {

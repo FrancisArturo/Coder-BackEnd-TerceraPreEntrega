@@ -9,28 +9,28 @@ export default class CartsRepository {
         let result = await this.dao.addCartDao();
         return result;
     }
-    getProductsCart = async () => {
-        let result = await this.dao.getProductsCartDao();
+    getProductsCart = async (cid) => {
+        let result = await this.dao.getProductsCartDao(cid);
         return result;
     }
-    addProductCart = async () => {
-        let result = await this.dao.addProductCartDao();
+    addProductCart = async (cid, pid) => {
+        let result = await this.dao.addProductCartDao(cid, pid);
         return result;
     }
-    deleteProductCart = async (limit, page, category, sort) => {
-        let result = await this.dao.deleteProductCartDao(limit, page, category, sort);
+    deleteProductCart = async () => {
+        let result = await this.dao.deleteProductCartDao(cid, pid);
         return result;
     }
-    deleteProductsCart = async (pid) => {
-        let result = await this.dao.deleteProductsCartDao(pid);
+    deleteProductsCart = async (cid) => {
+        let result = await this.dao.deleteProductsCartDao(cid);
         return result;
     }
-    updateProductCart = async (product) => {
-        let result = await this.dao.updateProductCartDao(product);
+    updateProductCart = async (cid, pid, quantity) => {
+        let result = await this.dao.updateProductCartDao(cid, pid, quantity);
         return result;
     }
-    updateProductsCart = async (idUpdate, product) => {
-        let result = await this.dao.updateProductsCartDao(idUpdate, product);
+    updateProductsCart = async (idUpdate, products) => {
+        let result = await this.dao.updateProductsCartDao(idUpdate, products);
         return result;
     }
 }

@@ -16,7 +16,7 @@ export default class cartRoutes {
         this.router.get(`${this.path}/:cid`, this.cartController.getProductsCartController );
 
         //add cart
-        this.router.post(`${this.path}`, this.cartController.addCartController);
+        // this.router.post(`${this.path}`, this.cartController.addCartController);
 
         //add product to cart
         this.router.post(`${this.path}/:cid/products/:pid`, this.cartController.addProductCartController);

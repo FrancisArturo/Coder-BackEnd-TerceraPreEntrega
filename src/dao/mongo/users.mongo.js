@@ -10,17 +10,16 @@ export default class UsersDao {
                 return "User already exists"
             }
             const pswHashed = await hashPassword(user.password);
-
             const newUser = {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
                 password: pswHashed,
                 age : user.age,
-                role: user.role,
+                role: "user",
             }
-            const result = await userModel.create(newUser);
-            return result;
+            const userCreated = await userModel.create(newUser);
+            return userCreated;
         } catch (error) {
             throw new Error("creating user error");
         }
@@ -56,5 +55,21 @@ export default class UsersDao {
             throw new Error("password recovery error");
         }
         
+    }
+    updateUserDao = async (uid, userUpdate) => {
+        try {
+            const updateUser = await userModel.updateOne({ _id: uid }, userUpdate);
+            return updateUser;
+        } catch (error) {
+            throw new Error("Update user error");
+        }
+    }
+    getUserCartIdDao = async (uid) => {
+        try {
+            const userFound = await userModel.findOne({ _id: uid });
+            return userFound;
+        } catch (error) {
+            throw new Error(error);
+        }
     }
 }

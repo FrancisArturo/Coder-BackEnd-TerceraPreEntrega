@@ -14,9 +14,9 @@ export default class CartsDao {
         }
         
     }
-    getProductsCartDao = async (id) => {
+    getProductsCartDao = async (cid) => {
         try {
-            const cart = await cartModel.findById(id).populate("products.product");
+            const cart = await cartModel.findById(cid).populate("products.product");
             if (!cart) {
                 return "Cart does not exist";
             }
@@ -85,9 +85,9 @@ export default class CartsDao {
     //     await cart.deleteOne();
     //     return "Cart deleted";
     // }
-    deleteProductsCartDao = async (id) => {
+    deleteProductsCartDao = async (cid) => {
         try {
-            const cart = await cartModel.findById(id);
+            const cart = await cartModel.findById(cid);
             if (!cart) {
                 return "Cart not found";
             }
