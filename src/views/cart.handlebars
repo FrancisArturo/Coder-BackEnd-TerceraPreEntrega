@@ -10,6 +10,7 @@
                 <p>category: {{this.product.category}}</p>
                 <p>quantity: {{this.quantity}} </p>
                 <p>id: {{this.product.id}}</p>
+                <button type="submit" id="deleteProductCartBtn" onclick="deleteProductCart('{{this.product.id}}')">Delete from cart</button>
             </div>
         {{/each }} 
     
@@ -17,3 +18,5 @@
         <p>No products found</p>
     {{/if}}
 </div>
+
+<script src="/js/deleteproductcart.js"></script>
