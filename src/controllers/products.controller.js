@@ -66,7 +66,7 @@ export default class ProductsController {
     updateProductController = async (req, res) => {
         try {
             const { pid } = req.params;
-            const productFind = await this.productsService.getProductsById(pid);
+            const productFind = await this.productsService.getProductById(pid);
             if (productFind === "No product found") {
                 return res.json({
                     message: "No product found",

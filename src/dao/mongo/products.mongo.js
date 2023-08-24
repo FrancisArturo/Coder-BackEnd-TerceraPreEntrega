@@ -62,9 +62,9 @@ export default class ProductsDao {
             throw new Error("Error adding product");
         }
     }
-    updateProductDao = async (idUpdate, product) => {
+    updateProductDao = async (pid, product) => {
         try {
-            const updateProduct = await productsModel.updateOne({ _id: idUpdate }, product);
+            const updateProduct = await productsModel.updateOne({ _id: pid }, product);
             return updateProduct;
         } catch (error) {
             throw new Error("Error updating product");

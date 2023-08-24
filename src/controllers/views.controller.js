@@ -18,17 +18,33 @@ export default class ViewsController {
     recoverViewController = async ( req, res) => {
         res.render("recover");
     }
+    addProductViewController = async (req, res) => {
+        res.render("addproduct");
+    }
+    updateProductViewController = async (req, res) => {
+        res.render("updateproduct");
+    }
     homeViewController = async (req, res) => {
         //query para buscar productos por categoria: frutas, lacteos o panificados
         const { limit = 10, page = 1, category = "all", sort = undefined  } = req.query;
         const user = req.user;
-        const userFound = await this.usersService.getUserCartId(user.user.user);
-        const cartIdFound = String(userFound.carts);
-        const cartIdMatch = cartIdFound.match(/[0-9a-f]{24}/i);
-        const cartId = cartIdMatch[0];
+        let adminRole = false;
+        let userRole = false;
+        let cartId;
+        
+        if (user.user.role == "admin"){
+            adminRole = true;
+        } else if (user.user.role == "user"){
+            userRole = true;
+            const userFound = await this.usersService.getUserCartId(user.user.user);
+            const cartIdFound = String(userFound.carts);
+            const cartIdMatch = cartIdFound.match(/[0-9a-f]{24}/i);
+            cartId = cartIdMatch[0];
+        };
+        
         try {
             const { docs, hasPrevPage, hasNextPage, nextPage, prevPage } = await this.productsService.getallProducts(limit, page, category, sort);
-            res.render("home", { products : docs, hasPrevPage, hasNextPage, nextPage, prevPage, page, limit, category, sort, user,cartId });
+            res.render("home", { products : docs, hasPrevPage, hasNextPage, nextPage, prevPage, page, limit, category, sort, user,cartId, adminRole, userRole });
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
