@@ -1,4 +1,7 @@
+import { EMAIL, PHONE } from "../config/config.js";
 import { CartsService, TicketsService } from "../repositories/index.js";
+import { transporter } from "../utils/transporter.js";
+import { client } from "../utils/twilioClient.js";
 
 
 export default class CartsController {
@@ -161,6 +164,10 @@ export default class CartsController {
                 await this.cartsService.deleteProductCart(cid, productId);
                 total += result[obj].price;
             }
+            if (total === 0) {
+                const cartProducts = await this.cartsService.getProductsCart(cid);
+                return res.render('ticket', {cartProducts});
+            }
             order = {
                 code:  Math.floor(Math.random() * (1000000000 - 10000000 + 1) + 10000000),
                 purchase_datetime: Date.now(),
@@ -169,6 +176,26 @@ export default class CartsController {
             }
             const cartProducts = await this.cartsService.getProductsCart(cid);
             const Ticketcreate = await this.ticketService.createTicket(order);
+            const sendEmail = await transporter.sendMail({
+                from: EMAIL,
+                to: user.user.email,
+                subject: `Purchase ticket ecommerce`,
+                html: `
+                <div>
+                    <h2>Ticket N°: ${Ticketcreate.code}</h2>
+                    <div>
+                        <p>purchase_datetime: ${Ticketcreate.purchase_datetime}</p>
+                        <p>amount: ${Ticketcreate.amount}</p>
+                        <p>purchaser: ${Ticketcreate.purchaser}</p>
+                    </div>
+                </div>
+                `,
+            })
+            const sendSms = await client.messages.create({
+                body: `Thanks for your Purchase ${user.user.firstName} ${user.user.lastName}, your ticket N° is: ${Ticketcreate.code}`,
+                from: PHONE,
+                to: '+541169455824',
+            })
             return res.render('ticket', {Ticketcreate, cartProducts})
         } catch (error) {
             res.status(400).json({ message: error.message });

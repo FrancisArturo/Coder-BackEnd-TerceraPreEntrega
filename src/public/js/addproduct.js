@@ -10,10 +10,6 @@ const addProductThumbnail= document.getElementById("thumbnail");
 const addBtn = document.getElementById("addProductBtn"); 
 
 
-
-
-
-
 async function addProduct(product) {
     const res = await fetch("/api/v1/products", {
         method: "POST",

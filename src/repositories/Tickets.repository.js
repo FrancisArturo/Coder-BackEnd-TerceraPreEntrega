@@ -1,6 +1,6 @@
 
 
-export default class TicketsRepositoy {
+export default class TicketsRepository {
     constructor(dao) {
         this.dao = dao;
     }

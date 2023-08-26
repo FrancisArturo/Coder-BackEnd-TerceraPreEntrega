@@ -19,4 +19,9 @@ export const {
     ADMIN_EMAIL,
     ADMIN_PASSWORD,
     PERSISTENCE,
+    EMAIL,
+    PSW_EMAIL,
+    SMS_ACC_SID,
+    SMS_AUTH_TOKEN,
+    PHONE,
 } = process.env;
