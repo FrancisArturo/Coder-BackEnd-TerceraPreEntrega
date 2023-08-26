@@ -26,11 +26,10 @@ export default class CartsDao {
         }
 
     }
-    addProductCartDao = async (cid, pid) => {
+    addProductCartDao = async (cid, pid, quantityProduct) => {
         try {
             const cart = await cartModel.findById(cid);
             const product = await productsModel.findById({ _id: pid });
-
             if (!cart) {
                 return "Cart not found";
             }
@@ -38,24 +37,24 @@ export default class CartsDao {
                 return "Product not found";
             }
             if (cart.products.length === 0) {
-                cart.products.push({product: pid, quantity: 1});
+                cart.products.push({product: pid, quantity: quantityProduct});
                 await cart.save();
                 return cart;
             }
             if (cart.products.length > 0) {
                 for (let obj in cart.products) {
                     if (cart.products[obj].product == pid) {
-                        cart.products[obj].quantity += 1;
+                        cart.products[obj].quantity += parseInt(quantityProduct);
                         await cart.save();
                         return cart;
                     }
                 }
             }
-            cart.products.push({product: pid, quantity: 1});
+            cart.products.push({product: pid, quantity: quantityProduct});
             await cart.save(); 
             return cart;
         } catch (error) {
-            throw new Error("add product cart error");
+            throw new Error(error);
         }
     }
     deleteProductCartDao = async (cid, pid) => {
@@ -158,9 +157,8 @@ export default class CartsDao {
                         quantity: cart.products[obj].quantity,
                         price: productPrice
                     }
-                    
                     productsOrder.push(product);
-                    productsModel.updateOne({ _id: cart.products[obj].product }, {stock: productInList.stock - cart.products[obj].quantity});
+                    await productsModel.updateOne({ _id: cart.products[obj].product }, {stock: productInList.stock - cart.products[obj].quantity});
                 }
             }
             return productsOrder;

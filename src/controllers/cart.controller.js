@@ -30,7 +30,8 @@ export default class CartsController {
     addProductCartController = async (req, res) => {
         try {
             const { cid, pid } = req.params;
-            const cart = await this.cartsService.addProductCart(cid, pid);
+            const quantityProduct = req.body;
+            const cart = await this.cartsService.addProductCart(cid, pid, quantityProduct.quantity);
             if (cart === "Cart not found") {
                 return res.json({
                     message: "Cart not found",
@@ -150,11 +151,9 @@ export default class CartsController {
             let total = 0;
             let order;
             const result = await this.cartsService.purchaseCart(cid);
-            
             if (!result) {
                 return res.json({ message: "Purchase error, products without stock"})
             }
-            
             for (let obj in result) {
                 let objectId = String(result[obj].id);
                 let objectIdMatch = objectId.match(/[0-9a-f]{24}/i);
@@ -162,7 +161,6 @@ export default class CartsController {
                 await this.cartsService.deleteProductCart(cid, productId);
                 total += result[obj].price;
             }
-            
             order = {
                 code:  Math.floor(Math.random() * (1000000000 - 10000000 + 1) + 10000000),
                 purchase_datetime: Date.now(),

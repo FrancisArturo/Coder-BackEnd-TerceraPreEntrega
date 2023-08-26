@@ -41,7 +41,9 @@
                 <p>price: {{this.price}}</p>
                 <p>category: {{this.category}}</p>
                 <p>stock: {{this.stock}} </p>
-                <p id="idProduct">id: {{this.id}}</p>              
+                <p>id: {{this.id}}</p> 
+                <label for="quantity">Quantity</label>
+                <input type="number" name="quantity" id="{{this.id}}" value="1">             
                 <button type="button" onclick="addCartProduct('{{this.id}}')" class="botonAgregarCarrito">Agregar al carrito</button>
             </div>
         {{/each }} 
