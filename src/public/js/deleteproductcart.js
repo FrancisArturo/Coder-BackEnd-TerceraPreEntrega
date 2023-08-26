@@ -19,8 +19,8 @@ const deleteProductCart = async (pid) => {
     } else if (data.message == "Product not found") {
         alert("Product not found");
     } else {
-        alert("Delete product from cart error")
-    }
-    window.location.reload()
+        alert("Delete product from cart error");
+    };
+    window.location.reload();
 }
 

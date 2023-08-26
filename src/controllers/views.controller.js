@@ -24,6 +24,9 @@ export default class ViewsController {
     updateProductViewController = async (req, res) => {
         res.render("updateproduct");
     }
+    ticketViewController = async (req, res) => {
+        res.render("ticket");
+    }
     homeViewController = async (req, res) => {
         //query para buscar productos por categoria: frutas, lacteos o panificados
         const { limit = 10, page = 1, category = "all", sort = undefined  } = req.query;

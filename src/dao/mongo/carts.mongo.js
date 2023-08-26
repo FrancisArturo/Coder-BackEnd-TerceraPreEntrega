@@ -73,7 +73,7 @@ export default class CartsDao {
             }
             return "Product not found";
         } catch (error) {
-            throw new Error("delete product cart error");
+            throw new Error(error);
         }
 
     }
@@ -122,9 +122,9 @@ export default class CartsDao {
             throw new Error("update product cart error");
         }
     }
-    updateProductsCartDao = async (id, products) => {
+    updateProductsCartDao = async (cid, products) => {
         try {
-            const cart = await cartModel.findById(id);
+            const cart = await cartModel.findById(cid);
             if (!cart) {
                 return "Cart not found";
             }
@@ -139,8 +139,34 @@ export default class CartsDao {
             return cart;
         } catch (error) {
             throw new Error("update products cart error");
+        }   
+    }
+    purchaseCartDao = async (cid) => {
+        try {
+            let productsOrder = [];
+            let productPrice;
+            const cart = await cartModel.findById(cid);
+            if (!cart) {
+                return "Cart not found";
+            }
+            for (let obj in cart.products) {
+                const productInList = await productsModel.findById(cart.products[obj].product);
+                if (productInList.stock >= cart.products[obj].quantity) {
+                    productPrice = cart.products[obj].quantity * productInList.price;
+                    let product = {
+                        id: cart.products[obj].product,
+                        quantity: cart.products[obj].quantity,
+                        price: productPrice
+                    }
+                    
+                    productsOrder.push(product);
+                    productsModel.updateOne({ _id: cart.products[obj].product }, {stock: productInList.stock - cart.products[obj].quantity});
+                }
+            }
+            return productsOrder;
+        } catch (error) {
+            throw new Error("Purchase products in cart error");
         }
-        
     }
 }
 

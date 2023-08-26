@@ -1,5 +1,6 @@
 import { Router } from "express";
 import CartController from "../controllers/cart.controller.js";
+import handlePolicies from "../middleware/handle-police.middleware.js";
 
 
 export default class cartRoutes {
@@ -13,10 +14,7 @@ export default class cartRoutes {
 
     initializeRoutes() {
         //get products from cart
-        this.router.get(`${this.path}/:cid`, this.cartController.getProductsCartController );
-
-        //add cart
-        // this.router.post(`${this.path}`, this.cartController.addCartController);
+        this.router.get(`${this.path}/:cid`, this.cartController.getProductsCartController);
 
         //add product to cart
         this.router.post(`${this.path}/:cid/products/:pid`, this.cartController.addProductCartController);
@@ -32,5 +30,8 @@ export default class cartRoutes {
 
         //update products from cart
         this.router.put(`${this.path}/:cid`, this.cartController.updateProductsCartController); 
+
+        //purchase products from cart
+        this.router.get(`${this.path}/:cid/purchase`, handlePolicies(["user"]), this.cartController.purchaseCartController); 
     }
 }

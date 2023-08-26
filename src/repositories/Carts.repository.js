@@ -33,4 +33,8 @@ export default class CartsRepository {
         let result = await this.dao.updateProductsCartDao(idUpdate, products);
         return result;
     }
+    purchaseCart = async (cid) => {
+        let result = await this.dao.purchaseCartDao(cid);
+        return result
+    }
 }

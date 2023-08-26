@@ -10,13 +10,17 @@
                 <p>category: {{this.product.category}}</p>
                 <p>quantity: {{this.quantity}} </p>
                 <p>id: {{this.product.id}}</p>
-                <button type="submit" id="deleteProductCartBtn" onclick="deleteProductCart('{{this.product.id}}')">Delete from cart</button>
+                <button type="button" id="deleteProductCartBtn" onclick="deleteProductCart('{{this.product.id}}')">Delete from cart</button>
             </div>
         {{/each }} 
+            <br>
+            <br>
+            <button type="button" id="purchaseBtn"><a href="/api/v1/carts/{{cid}}/purchase">Purchase</a></button>
+            {{else}}
+            <p>No products found</p>
+        {{/if}}
     
-    {{else}}
-        <p>No products found</p>
-    {{/if}}
+    
 </div>
 
 <script src="/js/deleteproductcart.js"></script>

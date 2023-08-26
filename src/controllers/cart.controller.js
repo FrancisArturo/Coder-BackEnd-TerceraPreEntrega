@@ -1,10 +1,12 @@
-import { CartsService } from "../repositories/index.js";
+import { CartsService, TicketsService } from "../repositories/index.js";
 
 
 export default class CartsController {
     cartsService;
+    ticketService;
     constructor() {
         this.cartsService = CartsService;
+        this.ticketService = TicketsService;
     }
     getProductsCartController = async (req, res) => {
         try {
@@ -25,18 +27,6 @@ export default class CartsController {
             res.status(400).json({ message: error.message });
         }
     }
-    // addCartController = async (req, res) => {
-    //     try {
-    //         const cart = req.body;
-    //         const newCart = await this.cartsService.addCart(cart);
-    //         return res.json({
-    //             message: "Cart added successfully",
-    //             data: newCart
-    //         })
-    //     } catch (error) {
-    //         res.status(400).json({ message: error.message });
-    //     }
-    // }
     addProductCartController = async (req, res) => {
         try {
             const { cid, pid } = req.params;
@@ -149,6 +139,39 @@ export default class CartsController {
                 message: "Cart updated successfully",
                 data: cart
             })
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
+    purchaseCartController = async (req, res) => {
+        try {
+            const { cid } = req.params;
+            const user = req.user;
+            let total = 0;
+            let order;
+            const result = await this.cartsService.purchaseCart(cid);
+            
+            if (!result) {
+                return res.json({ message: "Purchase error, products without stock"})
+            }
+            
+            for (let obj in result) {
+                let objectId = String(result[obj].id);
+                let objectIdMatch = objectId.match(/[0-9a-f]{24}/i);
+                let productId = objectIdMatch[0]
+                await this.cartsService.deleteProductCart(cid, productId);
+                total += result[obj].price;
+            }
+            
+            order = {
+                code:  Math.floor(Math.random() * (1000000000 - 10000000 + 1) + 10000000),
+                purchase_datetime: Date.now(),
+                amount: total,
+                purchaser: user.user.email,
+            }
+            const cartProducts = await this.cartsService.getProductsCart(cid);
+            const Ticketcreate = await this.ticketService.createTicket(order);
+            return res.render('ticket', {Ticketcreate, cartProducts})
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
