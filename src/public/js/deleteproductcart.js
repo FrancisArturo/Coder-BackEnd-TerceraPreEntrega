@@ -2,7 +2,7 @@
 
 
 const deleteProductCart = async (pid) => {
-    const userFound = await fetch("/api/v1/session/cartid", {
+    const userFound = await fetch("/api/v1/session/user", {
         method: "GET",
     });
     const userData = await userFound.json();

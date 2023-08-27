@@ -41,6 +41,7 @@ const initializePassport = () => {
     },
     async (accessToken, refreshToken, profile, done) => {
         try {
+            console.log(profile)
             let user = await userModel.findOne({ email: profile._json.email });
             if (user) {
                 return done(null, user);
@@ -54,6 +55,7 @@ const initializePassport = () => {
                     lastName: "",
                     email: profile._json?.email,
                     password: "",
+                    phone: "",
                     role: "user",
                     carts: cartUser._id,
                 }); 

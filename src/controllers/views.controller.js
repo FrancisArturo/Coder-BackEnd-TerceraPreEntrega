@@ -39,7 +39,7 @@ export default class ViewsController {
             adminRole = true;
         } else if (user.user.role == "user"){
             userRole = true;
-            const userFound = await this.usersService.getUserCartId(user.user.user);
+            const userFound = await this.usersService.getUserById(user.user.user);
             const cartIdFound = String(userFound.carts);
             const cartIdMatch = cartIdFound.match(/[0-9a-f]{24}/i);
             cartId = cartIdMatch[0];

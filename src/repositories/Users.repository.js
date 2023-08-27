@@ -21,8 +21,8 @@ export default class UsersRepository {
         let result = await this.dao.updateUserDao(uid, userUpdate);
         return result;
     }
-    getUserCartId = async (uid) => {
-        let result = await this.dao.getUserCartIdDao(uid);
+    getUserById = async (uid) => {
+        let result = await this.dao.getUserByIdDao(uid);
         return result;
     }
 }

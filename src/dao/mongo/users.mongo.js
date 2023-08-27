@@ -15,6 +15,7 @@ export default class UsersDao {
                 lastName: user.lastName,
                 email: user.email,
                 password: pswHashed,
+                phone: user.phone,
                 age : user.age,
                 role: "user",
             }
@@ -64,7 +65,7 @@ export default class UsersDao {
             throw new Error("Update user error");
         }
     }
-    getUserCartIdDao = async (uid) => {
+    getUserByIdDao = async (uid) => {
         try {
             const userFound = await userModel.findOne({ _id: uid });
             return userFound;

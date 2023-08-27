@@ -1,5 +1,5 @@
 import { EMAIL, PHONE } from "../config/config.js";
-import { CartsService, TicketsService } from "../repositories/index.js";
+import { CartsService, TicketsService, UsersService } from "../repositories/index.js";
 import { transporter } from "../utils/transporter.js";
 import { client } from "../utils/twilioClient.js";
 
@@ -7,9 +7,11 @@ import { client } from "../utils/twilioClient.js";
 export default class CartsController {
     cartsService;
     ticketService;
+    usersService;
     constructor() {
         this.cartsService = CartsService;
         this.ticketService = TicketsService;
+        this.usersService = UsersService;
     }
     getProductsCartController = async (req, res) => {
         try {
@@ -191,11 +193,14 @@ export default class CartsController {
                 </div>
                 `,
             })
-            const sendSms = await client.messages.create({
+            const userFound = await this.usersService.getUserById(user.user.user);
+            if (userFound.phone) {
+                const sendSms = await client.messages.create({
                 body: `Thanks for your Purchase ${user.user.firstName} ${user.user.lastName}, your ticket N° is: ${Ticketcreate.code}`,
                 from: PHONE,
-                to: '+541169455824',
-            })
+                to: `+${userFound.phone}`,
+                })
+            };
             return res.render('ticket', {Ticketcreate, cartProducts})
         } catch (error) {
             res.status(400).json({ message: error.message });

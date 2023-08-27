@@ -1,4 +1,5 @@
 import { ADMIN_EMAIL, ADMIN_PASSWORD } from "../config/config.js";
+import UserDTO from "../dao/DTOs/user.dto.js";
 import { CartsService, UsersService } from "../repositories/index.js";
 import {generateJWT} from "../utils/jwt.js";
 
@@ -74,10 +75,10 @@ export default class SessionController {
             return console.log(error);
         }
     }
-    getUserCartIdController = async (req, res) => {
+    getUserByIdController = async (req, res) => {
         try {
             const userId = req.user;
-            const cart = await this.usersService.getUserCartId(userId.user.user);
+            const cart = await this.usersService.getUserById(userId.user.user);
             return res.send(cart);
         } catch (error) {
             return console.log(error);
@@ -96,16 +97,11 @@ export default class SessionController {
             res.status(400).json({ message: error.message });
         }
     }
-    currentPublicController = async (req, res) => {
-        return res.json({message: "Public access"});
-    }
-    currentAdminController = async (req, res) => {
-        const user = req.user;
-        return res.json({message: "admin access", user});
-    }
-    currentUserController = async (req, res) => {
-        const user = req.user;
-        return res.json({message: "admin access", user});
+
+    currentController = async (req, res) => {
+        const user = req.user.user;
+        const currentUser = new UserDTO(user)
+        return res.json({message: "Current access information", currentUser});
     }
 
     githubLoginController  = async (req, res) => {
