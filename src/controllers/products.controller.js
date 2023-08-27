@@ -85,8 +85,8 @@ export default class ProductsController {
     deleteProductController = async (req, res) => {
         try {
             const { pid } = req.params;
-            const productFind = await this.productsService.getProductsById(pid);
-            if (productFind === "No product found") {
+            const productFind = await this.productsService.getProductById(pid);
+            if (productFind == "No product found") {
                 return res.json({
                     message: "No product found",
                 })

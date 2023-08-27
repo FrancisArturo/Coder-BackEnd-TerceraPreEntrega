@@ -16,12 +16,12 @@ export default class SessionController {
         try {
             const newUser = await this.usersService.createUser(req.body);
             if (newUser === "User already exists") {
-            return res.status(400).json({message: "User already exists"});
+                return res.status(401).render('register', {error: "User already exists"})
             }
             const cartUser = await this.cartsService.addCart();
             const cartUserId = cartUser._id;
             const addCartUser = await this.usersService.updateUser(newUser._id, {carts : cartUserId })
-            return res.send("User added successfully");
+            return res.render('register', {RegisterSuccessfully: "User added successfully"})
         } catch (error) {
             return res.status(400).json({ message: error.message });
         }

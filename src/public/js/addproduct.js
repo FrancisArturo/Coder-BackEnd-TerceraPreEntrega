@@ -35,7 +35,6 @@ addBtn.addEventListener("click", async (e) => {
         thumbnail: addProductThumbnail.value,
     };
     const data = await addProduct(product);
-    console.log(data)
     if (data.message === "Product added successfully") {
         alert("Product added successfully");
     } else if (data.message === "Product already exists") {

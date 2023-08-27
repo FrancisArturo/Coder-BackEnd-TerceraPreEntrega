@@ -28,9 +28,7 @@
                 <p>category: {{this.category}}</p>
                 <p>stock: {{this.stock}} </p>
                 <p id="idProduct">id: {{this.id}}</p>              
-                <form action="/api/v1/products/{{this.id}}" method="delete">
-                    <button type="submit">Delete</button>
-                </form>
+                <button type="button" onclick="deleteProduct('{{this.id}}')">Delete</button>
             </div>
         {{/each }} 
     {{else}}
@@ -63,3 +61,4 @@
 {{/if}}
 
 <script src="/js/index.js"></script>
+<script src="/js/deleteproduct.js"></script>
